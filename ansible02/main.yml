@@ -35,6 +35,14 @@
         group: "Sales"
         mode: '0660'
 
+    - name: Ensure /it directory exists
+      ansible.builtin.file:
+        path: "/it"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: '0755'
+
     - name: Ensure IT tasks.done file exists
       ansible.builtin.file:
         path: "/it/tasks.done"
