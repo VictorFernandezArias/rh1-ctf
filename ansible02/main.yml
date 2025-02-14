@@ -49,7 +49,9 @@
         line: "all folders are set"
         insertbefore: BOF
 
-    - name: Ensure ctf_sa has access to all team folders using setfacl
-      ansible.builtin.shell: "setfacl -m u:{{ special_user }}:rwx {{ base_path }}/{{ item }}"
-      loop: "{{ teams }}"
+    - name: Add ctf_sa to all team groups
+      ansible.builtin.user:
+        name: "{{ special_user }}"
+        groups: "{{ groups | join(',') }}"
+        append: yes
 
