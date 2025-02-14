@@ -49,11 +49,7 @@
         line: "all folders are set"
         insertbefore: BOF
 
-    - name: Ensure ctf_sa has access to all team folders
-      ansible.builtin.acl:
-        path: "{{ base_path }}/{{ item }}"
-        entity: "{{ special_user }}"
-        etype: user
-        permissions: "rwx"
-        state: present
-      loop: "{{ teams }}"
+    - name: Ensure ctf_sa has access to all team folders using setfacl
+      ansible.builtin.shell: "setfacl -m u:{{ special_user }}:rwx {{ base_path }}/{{ item }}"
+      loop: "{{ groups }}"
+
