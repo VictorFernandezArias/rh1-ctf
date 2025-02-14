@@ -1,8 +1,8 @@
----
+---git 
 - name: Create users, set password, assign groups, and configure SSH keys
   hosts: server2
   become: yes
-  var_file: people.yml
+  vars_files: people.yml
   
   tasks:
     - name: Ensure groups exist
