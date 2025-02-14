@@ -52,6 +52,6 @@
     - name: Add ctf_sa to all team groups
       ansible.builtin.user:
         name: "{{ special_user }}"
-        groups: "{{ groups | join(',') }}"
+        groups: "{{ teams | join(',') }}"
         append: yes
 
