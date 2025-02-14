@@ -1,4 +1,4 @@
----git 
+---
 - name: Create users, set password, assign groups, and configure SSH keys
   hosts: server2
   become: yes
