@@ -1,0 +1,42 @@
+---
+- name: Create users, set password, assign groups, and configure SSH keys
+  hosts: server2
+  become: yes
+  var_file: people.yml
+  
+  tasks:
+    - name: Ensure groups exist
+      ansible.builtin.group:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - Sales
+        - Support
+        - Services
+        - IT
+
+    - name: Create users and set password
+      ansible.builtin.user:
+        name: "{{ item.name }}"
+        password: "{{ password | password_hash('sha512') }}"
+        groups: "{{ item.groups }}"
+        append: yes
+        create_home: yes
+        shell: /bin/bash
+      loop: "{{ users }}"
+
+    - name: Ensure .ssh directory exists
+      ansible.builtin.file:
+        path: "/home/{{ item.name }}/.ssh"
+        state: directory
+        owner: "{{ item.name }}"
+        group: "{{ item.name }}"
+        mode: '0700'
+      loop: "{{ users }}"
+
+    - name: Add SSH public key
+      ansible.builtin.authorized_key:
+        user: "{{ item.name }}"
+        key: "{{ ssh_key }}"
+        state: present
+      loop: "{{ users }}"
