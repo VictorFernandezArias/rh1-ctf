@@ -1,0 +1,59 @@
+---
+- name: Configure group directories, files, and permissions
+  hosts: server2
+  become: yes
+  vars:
+    base_path: "/team"
+    groups:
+      - Sales
+      - Support
+      - Services
+      - IT
+    special_user: "ctf_sa"
+
+  tasks:
+    - name: Ensure base directory exists
+      ansible.builtin.file:
+        path: "{{ base_path }}"
+        state: directory
+        mode: '0755'
+
+    - name: Create group directories with proper permissions
+      ansible.builtin.file:
+        path: "{{ base_path }}/{{ item }}"
+        state: directory
+        owner: "root"
+        group: "{{ item }}"
+        mode: '0770'
+      loop: "{{ groups }}"
+
+    - name: Create "Salesnumbers" file inside Sales folder
+      ansible.builtin.file:
+        path: "{{ base_path }}/Sales/Salesnumbers"
+        state: touch
+        owner: "root"
+        group: "Sales"
+        mode: '0660'
+
+    - name: Ensure IT tasks.done file exists
+      ansible.builtin.file:
+        path: "{{ base_path }}/IT/tasks.done"
+        state: touch
+        owner: "root"
+        group: "IT"
+        mode: '0660'
+
+    - name: Add "all folders are set" to the top of /team/IT/tasks.done
+      ansible.builtin.lineinfile:
+        path: "{{ base_path }}/IT/tasks.done"
+        line: "all folders are set"
+        insertbefore: BOF
+
+    - name: Ensure ctf_sa has access to all team folders
+      ansible.builtin.acl:
+        path: "{{ base_path }}/{{ item }}"
+        entity: "{{ special_user }}"
+        etype: user
+        permissions: "rwx"
+        state: present
+      loop: "{{ groups }}"
