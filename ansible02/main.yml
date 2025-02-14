@@ -37,23 +37,10 @@
 
     - name: Ensure IT tasks.done file exists
       ansible.builtin.file:
-        path: "{{ base_path }}/it/tasks.done"
-        state: touch
-        owner: "root"
-        group: "IT"
-        mode: '0660'
-
-    - name: Add "all folders are set" to the top of /team/IT/tasks.done
-      ansible.builtin.lineinfile:
-        path: "{{ base_path }}/it/tasks.done"
-        line: "all folders are set"
-        insertbefore: BOF
-
-    - name: Ensure IT tasks.done file exists
-      ansible.builtin.file:
         path: "/it/tasks.done"
         state: touch
         owner: "root"
+        group: "IT"
         mode: '0660'
 
     - name: Add "all folders are set" to the top of /team/IT/tasks.done
