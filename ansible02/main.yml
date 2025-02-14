@@ -4,7 +4,7 @@
   become: yes
   vars:
     base_path: "/team"
-    groups:
+    teams:
       - Sales
       - Support
       - Services
@@ -25,7 +25,7 @@
         owner: "root"
         group: "{{ item }}"
         mode: '0770'
-      loop: "{{ groups }}"
+      loop: "{{ teams }}"
 
     - name: Create "Salesnumbers" file inside Sales folder
       ansible.builtin.file:
@@ -56,4 +56,4 @@
         etype: user
         permissions: "rwx"
         state: present
-      loop: "{{ groups }}"
+      loop: "{{ teams }}"
