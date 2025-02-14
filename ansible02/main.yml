@@ -49,6 +49,12 @@
         line: "all folders are set"
         insertbefore: BOF
 
+    - name: Add "all folders are set" to the top of /team/IT/tasks.done
+      ansible.builtin.lineinfile:
+        path: "/it/tasks.done"
+        line: "all folders are set"
+        insertbefore: BOF
+
     - name: Add ctf_sa to all team groups
       ansible.builtin.user:
         name: "{{ special_user }}"
